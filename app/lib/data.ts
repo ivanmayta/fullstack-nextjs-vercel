@@ -8,6 +8,7 @@ import {
     Revenue,
 } from "./definitions"
 import { formatCurrency } from "./utils"
+import { unstable_noStore as noStore } from "next/cache"
 
 export async function fetchRevenue() {
     try {
@@ -29,6 +30,7 @@ export async function fetchRevenue() {
 }
 
 export async function fetchLatestInvoices() {
+    noStore()
     try {
         const data = await sql<LatestInvoiceRaw>`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
@@ -38,10 +40,12 @@ export async function fetchLatestInvoices() {
       LIMIT 5`
         // await new Promise((resolve) => setTimeout(resolve, 3000))
 
+        console.log(data)
         const latestInvoices = data.rows.map((invoice) => ({
             ...invoice,
             amount: formatCurrency(invoice.amount),
         }))
+        // console.log(latestInvoices)
 
         return latestInvoices
     } catch (error) {
@@ -51,6 +55,7 @@ export async function fetchLatestInvoices() {
 }
 
 export async function fetchCardData() {
+    noStore()
     try {
         // You can probably combine these into a single SQL query
         // However, we are intentionally splitting them to demonstrate
