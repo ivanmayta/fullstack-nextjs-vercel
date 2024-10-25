@@ -1,7 +1,9 @@
 import { Card } from "./cards"
 import { Suspense } from "react"
 import { fetchCardData } from "@/app/lib/data"
+import { unstable_noStore as noStore } from "next/cache"
 async function CardsWrapper() {
+    noStore()
     //await new Promise((resolve) => setTimeout(resolve, 2000))
     const {
         numberOfCustomers,
